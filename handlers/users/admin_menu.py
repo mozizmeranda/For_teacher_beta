@@ -12,27 +12,38 @@ from utils.db_api.students_registration import db_students
 import aiogram
 from aiogram.utils.exceptions import BotBlocked
 from aiogram.dispatcher.filters import Command
+from data.config import ADMINS
 
 
 def seconds_to_time(seconds):
     time = datetime.fromtimestamp(seconds)
-    time_gmt5 = time
-    return time_gmt5.strftime('%H:%M:%S %A %B %Y')
-
-
-@dp.message_handler(Command("Get_all"))
-async def test(message: types.Message):
-    for i in db_students.get_all_students():
-        await message.answer(text=f"{i[0]}")
+    return time
 
 
 @dp.message_handler(text="Найти вопрос 🔍")
 async def find_question(message: types.Message, state: FSMContext):
-    if message.from_user.id == 5928962311:
+    if message.from_user.id == int(ADMINS[0]):
         await message.answer("Пожалуйста отправьте мне код вопроса.")
+        # await bot.send_message(i, text="Пожалуйста отправьте мне код вопроса.")
         await state.set_state("find_question")
     else:
         await message.answer("Чего? Я вас не понимаю.")
+
+
+@dp.message_handler(text="Hello")
+async def get_hello(message: types.Message):
+    await message.answer("Hello")
+
+
+# @dp.message_handler(text="Найти вопрос 🔍")
+# async def find_question(message: types.Message, state: FSMContext):
+#     if message.from_user.id == 5928962311:
+#         print(f"ADMIN in handler: {int(ADMINS[0])}")
+#         await message.answer("Пожалуйста отправьте мне код вопроса.")
+#         # await bot.send_message(i, text="Пожалуйста отправьте мне код вопроса.")
+#         await state.set_state("find_question")
+#     else:
+#         await message.answer("Чего? Я вас не понимаю.")
 
 
 @dp.message_handler(state="find_question")
@@ -40,8 +51,8 @@ async def show_question(message: types.Message, state: FSMContext):
     if questions.check_existence(code=int(message.text)) is not None:
         ans = (f"Вопрос задал: {questions.get_student(code=int(message.text))[0]}\n"
                f"Вопрос задан: {seconds_to_time(int(message.text))}\n"
-            f"Сам вопрос: {questions.get_question(code=int(message.text))[0]}"
-            f"Статус: Не отвечан.")
+            f"Сам вопрос: {questions.get_question(code=int(message.text))[0]}\n"
+            f"Статус: Не отвечен.")
         await message.answer(text=ans, reply_markup=question_button(question_code=int(message.text)))
         await state.finish()
     elif answers.check(code=int(message.text)) is not None: #add questions
@@ -49,7 +60,7 @@ async def show_question(message: types.Message, state: FSMContext):
                f"Вопрос задан: {seconds_to_time(int(message.text))}\n"
                f"Сам вопрос: {answers.get_question(code=int(message.text))}\n"
                f"Ответ на этот вопрос: {answers.get_answer(code=int(message.text))}\n"
-               f"Статус: Отвечан")
+               f"Статус: Отвечен")
         await message.answer(text=ans)
         await state.finish()
     else:

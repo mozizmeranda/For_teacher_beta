@@ -59,7 +59,6 @@ class Students:
 
     def delete_for_edit(self, id):
         sql = f"DELETE FROM students WHERE id={id}"
-        print(f"ID for delete: {id}")
         self.execute(sql=sql, commit=True)
 
     def delete(self):

@@ -4,6 +4,8 @@ from utils.db_api import students_registration
 
 from data import config
 
-bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
+PROXY_URL = "http://proxy.server:3128"
+
+bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML, proxy=)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)

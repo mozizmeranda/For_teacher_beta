@@ -9,7 +9,7 @@ from states.question_state import Questionioning
 from keyboards.inline.Confirm_button import button, post_callback
 from keyboards.inline.answer_key import question_button
 from datetime import datetime
-from aiogram.utils.markdown import hcode
+from aiogram.utils.markdown import hcode, hbold
 
 
 @dp.message_handler(Command("delete_questions"))
@@ -18,15 +18,16 @@ async def get_command(message: types.Message):
     await message.answer("Успешно удалено")
 
 
-@dp.message_handler(Command("question"))
+@dp.message_handler()
 async def begin(message: types.Message):
-    if db_students.check(message.from_user.id) is not None:
-        await message.answer(text=F_language(answer="Напишите несколько слов про тему вашего вопроса.\n"
-                                                    "Максимум 10 символов.",
-                                             language=db_students.get_language(id=message.from_user.id)))
-        await Questionioning.Theme.set()
-    else:
-        await message.answer(text="Пройдите регистрацию")
+    if message.text == "Задать вопрос" or message.text == "Savol berish":
+        if db_students.check(message.from_user.id) is not None:
+            await message.answer(text=F_language(answer="Напишите несколько слов про тему вашего вопроса.\n"
+                                                        "Максимум 10 символов.",
+                                                 language=db_students.get_language(id=message.from_user.id)))
+            await Questionioning.Theme.set()
+        else:
+            await message.answer(text="Пройдите регистрацию")
 
 
 @dp.message_handler(state=Questionioning.Theme)
@@ -46,7 +47,7 @@ async def theme(message: types.Message, state: FSMContext):
 async def get_question(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['question'] = message.text
-        await message.answer(text=f"{data['theme']}\n \n "
+        await message.answer(text=f"{hbold(data['theme'])}\n \n "
                                   f"{data['question']}")
         await message.answer(text=F_language(answer="Вы точно хотите задать этот вопрос?",
                                              language=db_students.get_language(id=message.from_user.id)),
@@ -74,8 +75,8 @@ async def click_confirm(call: types.CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(post_callback.filter(action="cancel"), state=Questionioning.Confirm)
 async def make_cancel(call: types.CallbackQuery, state: FSMContext):
-    await call.message.answer(F_language(answer="Вы отменили отправку вопроса. Чтобы отправить вопрос, "
-                                                "вам надо заново задать его, нажав другую кнопку.",
+    await call.message.answer(F_language(answer="Вы отменили отправку вопроса. Чтобы отправить вопрос, вам надо заново задать его, нажав другую кнопку.",
                                          language=db_students.get_language(call.from_user.id)))
+    await call.message.edit_reply_markup()
     await state.finish()
     

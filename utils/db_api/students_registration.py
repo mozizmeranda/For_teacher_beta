@@ -27,7 +27,7 @@ class Students:
         return data
 
     def create_table_users(self):
-        sql = "CREATE TABLE IF NOT EXISTS students(id INT, group_ TEXT, full_name TEXT, language TEXT);"
+        sql = "CREATE TABLE IF NOT EXISTS students(id INT PRIMARY KEY, group_ TEXT, full_name TEXT, language TEXT);"
         self.execute(sql, commit=True)
 
     def add_student(self, id, group, full_name, language):
@@ -57,10 +57,15 @@ class Students:
         sql = "SELECT id FROM students"
         return self.execute(sql=sql, fetchall=True)
 
+    def delete_for_edit(self, id):
+        sql = f"DELETE FROM students WHERE id={id}"
+        print(f"ID for delete: {id}")
+        self.execute(sql=sql, commit=True)
+
     def delete(self):
         sql = "DROP TABLE students"
         self.execute(sql)
 
 
 db_students = Students()
-db_students.create_table_users()
+# db_students.create_table_users()

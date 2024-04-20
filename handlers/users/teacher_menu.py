@@ -1,26 +1,26 @@
 from aiogram.dispatcher import FSMContext
 import aiogram
 from aiogram.utils.exceptions import BotBlocked
-from loader import dp, bot
+from loader import dp, bot, db
 from aiogram import types
-from utils.db_api.Questions import questions
 from keyboards.inline.teacher_confirm_button import teacher_menu
 from aiogram.utils.markdown import hcode
 from states.teacher_state import Teacher
 from utils.db_api.questions_answers import answers
 from aiogram.dispatcher.filters import Command
 from utils.misc.language_types import F_language
-from utils.db_api.students_registration import db_students
 
 
 @dp.callback_query_handler(lambda x: x.data and x.data.startswith('q_'))
 async def make_answer(call: types.CallbackQuery, state: FSMContext):
     code = call.data.split("_")[1]
-    if answers.check(code=code) is None:
+    # if answers.check(code=code) is None:
+    if db.check_existance(table="answers", criteria="code", id=int(code)) is None:
         await Teacher.GetAnswer.set()
         async with state.proxy() as data:
             data['code'] = int(code)
-        ans = f"Ответьте на этот вопрос с кодом: {hcode(code)}\n Сам вопрос: {questions.get_question(code=code)[0]}"
+        question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
+        ans = f"Ответьте на этот вопрос с кодом: {hcode(code)}\n Сам вопрос: {question}"
         await call.message.answer(text=ans)
         await call.message.edit_reply_markup()
     else:
@@ -46,14 +46,14 @@ async def confirm_from_teacher(call: types.CallbackQuery, state: FSMContext):
     try:
         code = call.data.split("_")[1]
         async with state.proxy() as data:
-            answers.add_answer(question=questions.get_question(code=data['code'])[0], code=data['code'],
-                               student=questions.get_student(code=data['code'])[0], answer=data['answer'])
-            receiver = questions.get_receiver(code=code)
+            receiver = db.get_from_table(element="id", table="questions", unique="code", argument=code)
+            question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
+            # get_id = db.get_from_table(element="id", table="questions", unique="code", argument=code)
+            answer = (receiver, question, data['answer'], code)
+            db.insert_into_table(table="answers", values=answer)
             response = str(F_language(answer="Получен ответ на вопрос: ",
-                                  language=db_students.get_language(id=questions.get_id(code=data['code'])))) + (f"{questions.get_question(code=data['code'])[0]}: \n"
-                                                                                                                 f"{data['answer']}")
-            await bot.send_message(chat_id=receiver[0], text=response)
-            questions.delete_question(code=data['code'])
+                                      language=db.get_language(id=receiver))) + f"{question}:\n{data['answer']}"
+            await bot.send_message(chat_id=receiver, text=response)
         await call.answer(text="Ответ отправлен", show_alert=True)
         await call.message.edit_reply_markup()
         await state.finish()

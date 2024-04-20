@@ -1,23 +1,23 @@
 import sqlite3
 
 
-class Questions:
-    def __init__(self, path_to_db="main.db"):
+class DataBase:
+    def __init__(self, path_to_db="database.db"):
         self.path_to_db = path_to_db
 
     @property
     def connection(self):
         return sqlite3.connect(self.path_to_db)
 
-    def execute(self, sql: str, parameters: tuple=None, fetchone=False,
+    def execute(self, sql: str, params: tuple = None, fetchone=False,
                 fetchall=False, commit=False):
-        if not parameters:
-            parameters = tuple()
+        if not params:
+            params = tuple()
         connection = self.connection
         # connection.set_trace_callback(logger)
         cursor = connection.cursor()
         data = None
-        cursor.execute(sql, parameters)
+        cursor.execute(sql, params)
 
         if commit:
             connection.commit()
@@ -29,52 +29,54 @@ class Questions:
         return data
 
     def create_table_users(self):
-        sql = ("CREATE TABLE IF NOT EXISTS questions(id INT, theme TEXT, question TEXT, question_code INT, student TEXT)")
+        sql = "CREATE TABLE IF NOT EXISTS Users(id INT PRIMARY KEY, group_name TEXT, full_name TEXT, language TEXT)"
         self.execute(sql, commit=True)
 
-    def add_question(self, id, theme, question, code, student):
-        sql = "INSERT INTO questions(id, theme, question, question_code, student) VALUES (?, ?, ?, ?, ?)"
-        parameters = (id, theme, question, code, student)
-        self.execute(sql, parameters, commit=True)
+    def create_table_questions(self):
+        sql = "CREATE TABLE IF NOT EXISTS questions(id INT, theme TEXT, question TEXT, student TEXT, code INT)"
+        self.execute(sql=sql, commit=True)
 
-    def get_receiver(self, code):
-        sql = f"SELECT id FROM questions WHERE question_code={code}"
-        return self.execute(sql, fetchone=True)
+    def create_table_answers(self):
+        sql = "CREATE TABLE IF NOT EXISTS answers(id INT, question TEXT, answer TEXT, code INT)"
+        self.execute(sql=sql, commit=True)
 
-    def delete_question(self, code):
-        sql = f"DELETE FROM questions WHERE question_code = {code}"
+    def main_db(self):
+        self.create_table_answers()
+        self.create_table_questions()
+        self.create_table_users()
+
+    def insert_into_table(self, table: str, values: tuple):
+        if table == "Users":
+            sql_users = f"INSERT INTO Users(id, group_name, full_name, language) VALUES (?, ?, ?, ?)"
+            self.execute(sql=sql_users, params=values, commit=True)
+        if table == "questions":
+            parameters_questions = "(id, theme, question, student, code)"
+            sql_questions = f"INSERT INTO questions{parameters_questions} VALUES (?, ?, ?, ?, ?)"
+            self.execute(sql=sql_questions, params=values, commit=True)
+        if table == "answers":
+            parameters_answers = "(id, question, answer, code)"
+            sql_answers = f"INSERT INTO answers{parameters_answers} VALUES (?, ?, ?, ?)"
+            self.execute(sql=sql_answers, params=values, commit=True)
+
+    def check_existance(self, table: str, criteria: str, id: int):
+        sql = f"SELECT * FROM {table} WHERE {criteria}={id}"
+        return self.execute(sql=sql, fetchone=True)
+
+    def get_language(self, id):
+        sql = f"SELECT language FROM Users WHERE id={id}"
+        result = self.execute(sql=sql, fetchone=True)
+        print(f"ID: {id}, result: {result}")
+        return result[0]
+
+    def get_from_table(self, element: str, table: str, unique: str, argument: str): # it returns (element,), only 1 element
+        sql = f"SELECT {element} FROM {table} WHERE {unique}={argument}"
+        result = self.execute(sql=sql, fetchone=True)
+        return result[0]
+
+    def delete_user(self, id):
+        sql = f"DELETE FROM Users WHERE id={id}"
+        self.execute(sql=sql, commit=True)
+
+    def delete_table(self, table: str):
+        sql = f"DROP TABLE {table}"
         self.execute(sql, commit=True)
-
-    def get_question(self, code):
-        sql = f"SELECT question FROM questions WHERE question_code = {code}"
-        return self.execute(sql=sql, fetchone=True)
-
-    def get_student(self, code):
-        sql = f"SELECT student FROM questions WHERE question_code = {code}"
-        return self.execute(sql=sql, fetchone=True)
-
-    def check_existence(self, code):
-        sql = f"SELECT * FROM questions WHERE question_code={code}"
-        return self.execute(sql=sql, fetchone=True)
-
-    def get_id(self, code):
-        try:
-            sql = f"SELECT id FROM questions WHERE question_code={code}"
-            return self.execute(sql, fetchone=True)[0]
-        except TypeError:
-            pass
-
-    def delete_all(self):
-        sql = "DROP TABLE questions"
-        self.execute(sql)
-
-
-questions = Questions()
-
-# def logger(statement):
-#     print(f"""
-#     -----------------------------------------------------
-#     executing:
-#     {statement}
-#     ---------------------------------------
-#         """)

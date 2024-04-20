@@ -67,4 +67,4 @@ class Students:
 
 
 db_students = Students()
-# db_students.create_table_users()
+db_students.create_table_users()

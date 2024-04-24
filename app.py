@@ -10,7 +10,7 @@ import asyncio
 
 
 async def on_startup(dispatcher):
-    await dp.bot.set_webhook(config.WEBHOOK_URL, drop_pending_updates=True)
+    await dp.bot.set_webhook(config.WEBHOOK_URL)
     await set_default_commands(dispatcher)
     db.main_db()
     # Notify about startup

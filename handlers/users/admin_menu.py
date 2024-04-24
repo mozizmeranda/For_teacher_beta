@@ -6,7 +6,6 @@ from keyboards.inline.answer_key import question_button
 from states.mailing_state import Mailing
 from keyboards.inline.teacher_confirm_button import mailing_callback, confirm_keys
 from aiogram.utils.markdown import hbold
-from utils.db_api.students_registration import db_students
 import aiogram
 from aiogram.utils.exceptions import BotBlocked
 from aiogram.dispatcher.filters import Command
@@ -78,7 +77,7 @@ async def get_text(message: types.Message, state: FSMContext):
 @dp.callback_query_handler(mailing_callback.filter(action="confirm"), state=Mailing.Confirm)
 async def confirm(call: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
-        for i in db_students.get_all_students():
+        for i in db.get_all_students():
             try:
                 await bot.send_message(chat_id=i[0], text=data['text'])
                 await call.answer(text="Рассыла проведена успешно", show_alert=True)

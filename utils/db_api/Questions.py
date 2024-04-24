@@ -74,6 +74,10 @@ class DataBase:
         result = self.execute(sql=sql, fetchone=True)
         return result[0]
 
+    def get_all_students(self):
+        sql = "SELECT id FROM Users"
+        return self.execute(sql, fetchall=True)
+
     def delete_user(self, id):
         sql = f"DELETE FROM Users WHERE id={id}"
         self.execute(sql=sql, commit=True)

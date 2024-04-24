@@ -6,7 +6,6 @@ from aiogram import types
 from keyboards.inline.teacher_confirm_button import teacher_menu
 from aiogram.utils.markdown import hcode
 from states.teacher_state import Teacher
-from utils.db_api.questions_answers import answers
 from aiogram.dispatcher.filters import Command
 from utils.misc.language_types import F_language
 

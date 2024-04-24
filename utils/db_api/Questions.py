@@ -68,7 +68,8 @@ class DataBase:
         print(f"ID: {id}, result: {result}")
         return result[0]
 
-    def get_from_table(self, element: str, table: str, unique: str, argument: str): # it returns (element,), only 1 element
+    # it returns (element,), only 1 element
+    def get_from_table(self, element: str, table: str, unique: str, argument: str):
         sql = f"SELECT {element} FROM {table} WHERE {unique}={argument}"
         result = self.execute(sql=sql, fetchone=True)
         return result[0]

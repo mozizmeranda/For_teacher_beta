@@ -1,6 +1,5 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from utils.db_api import students_registration
 from utils.db_api.Questions import DataBase
 
 from data import config

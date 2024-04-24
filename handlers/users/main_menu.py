@@ -59,14 +59,9 @@ async def click_confirm(call: types.CallbackQuery, state: FSMContext):
     code = int(datetime.now().timestamp())#%10000000
     async with state.proxy() as data:
         for i in ADMINS:
-            await bot.send_message(chat_id=i, text=f"{data['theme']}\n {data['question']}\n"
-                                                f"Студент: {db.get_from_table(element="full_name", table="Users", 
-                                                                              unique="id", argument=call.from_user.id)}\n"
-                                                "code: " + hcode(f"{code}"),
-                                   reply_markup=question_button(question_code=code))
+            question = f"{data['theme']}\n {data['question']}\nСтудент: {db.get_from_table(element="full_name", table="Users", unique="id", argument=call.from_user.id)}"
+            await bot.send_message(chat_id=i, text=question, reply_markup=question_button(question_code=code))
     async with state.proxy() as data:
-        # questions.add_question(id=call.message.chat.id, theme=data['theme'], question=data['question'],
-        #                        code=code, student=db_students.get_info(id=call.from_user.id))
         student_name = db.get_from_table(element="full_name", table="Users", unique="id", argument=call.from_user.id)
         student_group = db.get_from_table(element="group_name", table="Users", unique="id", argument=call.from_user.id)
         student = f"Имя: {student_name}, Группа: {student_group}"

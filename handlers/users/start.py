@@ -38,7 +38,6 @@ async def bot_start(message: types.Message):
         await Registration.Language.set()
 
 
-
 @dp.callback_query_handler(lambda x: x.data and x.data.startswith('l_'), state=Registration.Language)
 async def choose_language(call: types.CallbackQuery, state: FSMContext):
     language = call.data.split("_")[1] #'ru' or 'uz'
@@ -73,4 +72,3 @@ async def get_name(message: types.Message, state: FSMContext):
         user = (message.from_user.id, data['group'], data['name'], data['language'])
         db.insert_into_table(table="Users", values=user)
     await state.finish()
-

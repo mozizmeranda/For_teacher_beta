@@ -8,15 +8,21 @@ from data import config
 from aiohttp import web
 import asyncio
 
+
 async def on_startup(dispatcher):
-    await dp.bot.set_webhook(config.WEBHOOK_URL)
+    await dp.bot.set_webhook(config.WEBHOOK_URL, drop_pending_updates=True)
     await set_default_commands(dispatcher)
-    try:
-        db.main_db()
-    except Exception as e:
-        print(e)
+    db.main_db()
     # Notify about startup
     await on_startup_notify(dispatcher)
+
+
+async def on_startup_handler():
+    await on_startup(dp)
+
+
+async def on_shutdown(dispatcher):
+    await dp.bot.delete_webhook()
 
 
 async def process_telegram_update(update):
@@ -31,9 +37,6 @@ async def handle(request):
         return web.Response(text="OK")
     else:
         return web.Response(text="Invalid token")
-
-async def on_shutdown(dp):
-    await dp.bot.delete_webhook()
 
 
 if __name__ == '__main__':

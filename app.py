@@ -50,13 +50,11 @@ async def on_shutdown(dispatcher):
 #     # Уведомляет про запуск
 #     await on_startup_notify(dispatcher)
 
-async def main():
-    await executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup,
-                           on_shutdown=on_shutdown,
-                           host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
+executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup,
+                           on_shutdown=on_shutdown,host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
 
 
-if __name__ == '__main__':
-    asyncio.run(main())
+# if __name__ == '__main__':
+#     asyncio.run(main())
     # executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
 

@@ -5,10 +5,10 @@ import os
 env = Env()
 env.read_env()
 
-BOT_TOKEN = env.str("BOT_TOKEN")  # Забираем значение типа str
-ADMINS = env.list("ADMINS")  # Тут у нас будет список из админов
+BOT_TOKEN = "7196106888:AAGgLiOaJPZigL2AZfoPx1Mf-Wi1qU6CxmU"  # Забираем значение типа str
+ADMINS = [5928962311]  # Тут у нас будет список из админов
 channels = [-1001944359018]
-IP = env.str("ip")  # Тоже str, но для айпи адреса хоста
+IP = "localhost"  # Тоже str, но для айпи адреса хоста
 WEBAPP_HOST = "0.0.0.0"
 WEBAPP_PORT = int(os.environ.get('PORT'))
 WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'

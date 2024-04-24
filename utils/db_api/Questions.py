@@ -26,6 +26,7 @@ class DataBase:
         if fetchall:
             data = cursor.fetchall()
         connection.close()
+
         return data
 
     def create_table_users(self):

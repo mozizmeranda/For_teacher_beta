@@ -7,7 +7,7 @@ from utils.set_bot_commands import set_default_commands
 from data import config
 
 async def on_startup(dispatcher):
-    await dp.bot.set_webhook(config.WEBHOOK_URL, drop_pending_updates=True)
+    await dp.bot.set_webhook(config.WEBHOOK_URL)
     await set_default_commands(dispatcher)
     try:
         db.main_db()

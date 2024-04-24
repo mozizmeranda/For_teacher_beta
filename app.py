@@ -5,6 +5,7 @@ from aiogram import types
 from utils.notify_admins import on_startup_notify
 from utils.set_bot_commands import set_default_commands
 from data import config
+import asyncio
 
 async def on_startup(dispatcher):
     await dp.bot.set_webhook(config.WEBHOOK_URL)
@@ -49,9 +50,13 @@ async def on_shutdown(dispatcher):
 #     # Уведомляет про запуск
 #     await on_startup_notify(dispatcher)
 
+async def main():
+    executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup,
+                           on_shutdown=on_shutdown,
+                           host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
+
 
 if __name__ == '__main__':
-    executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown,
-                            host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
+    asyncio.run(main())
     # executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
 

@@ -17,7 +17,7 @@ async def on_startup(dispatcher):
     # Notify about startup
     await on_startup_notify(dispatcher)
 
-async def on_shutdown(dispatcher):
+async def on_shutdown(dp):
     await dp.bot.delete_webhook()
 
 async def run_bot():

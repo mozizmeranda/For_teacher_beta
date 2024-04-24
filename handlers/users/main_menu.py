@@ -59,7 +59,7 @@ async def click_confirm(call: types.CallbackQuery, state: FSMContext):
     code = int(datetime.now().timestamp())#%10000000
     async with state.proxy() as data:
         for i in ADMINS:
-            question = f"{data['theme']}\n {data['question']}\nСтудент: {db.get_from_table(element="full_name", table="Users", unique="id", argument=call.from_user.id)}"
+            question = f"{data['theme']}\n {data['question']}\nСтудент: {db.get_from_table(element='full_name', table='Users', unique='id', argument=call.from_user.id)}"
             await bot.send_message(chat_id=i, text=question, reply_markup=question_button(question_code=code))
     async with state.proxy() as data:
         student_name = db.get_from_table(element="full_name", table="Users", unique="id", argument=call.from_user.id)

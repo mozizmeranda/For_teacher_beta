@@ -5,7 +5,7 @@ import os
 env = Env()
 env.read_env()
 
-BOT_TOKEN = "7196106888:AAGgLiOaJPZigL2AZfoPx1Mf-Wi1qU6CxmU"  # Забираем значение типа str
+BOT_TOKEN = "7196106888:AAG1v1ncrexwL2pgWO7PbPDrPqeAj-YmZdE"  # Забираем значение типа str
 ADMINS = [5928962311]  # Тут у нас будет список из админов
 channels = [-1001944359018]
 IP = "localhost"  # Тоже str, но для айпи адреса хоста

@@ -51,7 +51,7 @@ async def on_shutdown(dispatcher):
 #     await on_startup_notify(dispatcher)
 
 async def main():
-    executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup,
+    await executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup,
                            on_shutdown=on_shutdown,
                            host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
 

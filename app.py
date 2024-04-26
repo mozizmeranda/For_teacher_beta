@@ -1,6 +1,6 @@
 from aiogram.utils import executor
 from loader import dp, db, bot
-import middlewares, filters, handlers
+# import middlewares, filters, handlers
 from utils.notify_admins import on_startup_notify
 from data import config
 from aiogram import Dispatcher
@@ -9,6 +9,8 @@ import asyncio
 
 async def on_startup(dispatcher: Dispatcher):
     await bot.set_webhook(config.WEBHOOK_URL)
+    import middlewares
+    import filters
 
 
 async def on_startup_handler():

@@ -9,7 +9,7 @@ import asyncio
 
 async def on_startup(dispatcher: Dispatcher):
     db.main_db()
-    await on_startup_notify(dispatcher)
+    # await on_startup_notify(dispatcher)
     await dispatcher.bot.set_webhook(config.WEBHOOK_URL)
 
 

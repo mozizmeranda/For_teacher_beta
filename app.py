@@ -7,14 +7,8 @@ from aiogram import Dispatcher
 import asyncio
 
 
-def on_startup(dispatcher: Dispatcher):
-    db.main_db()
-
-    async def startup():
-        await dispatcher.bot.set_webhook(config.WEBHOOK_URL)
-    on_startup_notify(dispatcher)
-    asyncio.run(startup())
-    bot.close()
+async def on_startup(dispatcher: Dispatcher):
+    await bot.set_webhook(config.WEBHOOK_URL)
 
 
 async def on_startup_handler():

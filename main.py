@@ -16,7 +16,7 @@ async def on_shutdown(dispatcher):
 
 
 if __name__ == "__main__":
-    from handlers import dp
+    from loader import dp
     start_webhook(
         dispatcher=dp,
         webhook_path=config.WEBHOOK_PATH,

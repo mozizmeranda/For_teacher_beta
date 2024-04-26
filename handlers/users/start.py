@@ -17,7 +17,6 @@ async def delete_all_ones(message: types.Message):
 
 @dp.message_handler(Command("edit"))
 async def edit_data(message: types.Message):
-    print(f"ID in handler: {message.from_user.id}")
     await message.answer(F_language(answer="Вы вызвали команду для замены ваших данных. Вам придется заново зарегистрироваться.",
                                     language=db.get_language(id=message.from_user.id)))
     db.delete_user(id=message.from_user.id)
@@ -31,6 +30,10 @@ async def edit_data(message: types.Message):
 async def bot_start(message: types.Message):
     if message.from_user.id == 5928962311:
         await message.answer(text="Вы учитель и админ одновременно", reply_markup=teachers_buttons)
+    elif db.check_existance(table="Users", criteria="id", id=message.from_user.id) is not None:
+        await message.answer(text=F_language(answer="Вы уже зарегестрированы в системе. Для "
+                                                    "смены данных вызовите команду /edit.",
+                                             language=db.get_language(id=message.from_user.id)))
     else:
         await message.answer(text="Здравствуйте, пожалуйста укажите какой язык вы предпочитаете использовать. \n"
                                   "Assalomu alaykum, qaysi tildan foydalanishni afzal ko'rasiz.",

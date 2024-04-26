@@ -15,7 +15,7 @@ dictionary = {
     "Вы можете задать вопрос с помощью кнопки ниже.": "Quyidagi tugma yordamida savol qoldirishingiz mumkin.",
     "Вы отменили отправку вопроса. Чтобы отправить вопрос, вам надо заново задать его, нажав другую кнопку.": "Siz savol yuborishni bekor qildingiz. Savolni qayta yuborish uchun quyidagi tugmani bosing.",
     "Код вашего вопроса: ": "Sizni savolingizni codi: ",
-    " ": " "
+    "Вы уже зарегестрированы в системе. Для смены данных вызовите команду /edit.": "Siz allaqachon tizimda ro'yxatdan o'tgansiz. Ma'lumotlarni o'zgartirish uchun /edit buyrug'ini chaqiring."
 }
 
 

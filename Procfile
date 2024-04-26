@@ -1,1 +1,1 @@
-web: ado main
+web: python app.py

@@ -28,7 +28,7 @@ async def on_shutdown(dispatcher):
 async def process_telegram_update(update):
     await dp.process_update(update)
 
-def main():
+if __name__ == "__main__":
     executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup,
                            on_shutdown=on_shutdown, host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
 

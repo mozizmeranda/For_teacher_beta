@@ -13,7 +13,6 @@ from utils.misc.language_types import F_language
 @dp.callback_query_handler(lambda x: x.data and x.data.startswith('q_'))
 async def make_answer(call: types.CallbackQuery, state: FSMContext):
     code = call.data.split("_")[1]
-    # if answers.check(code=code) is None:
     if db.check_existance(table="answers", criteria="code", id=int(code)) is None:
         await Teacher.GetAnswer.set()
         async with state.proxy() as data:

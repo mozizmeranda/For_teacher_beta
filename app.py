@@ -3,10 +3,12 @@ from loader import dp, db, bot
 import middlewares, filters, handlers
 from utils.notify_admins import on_startup_notify
 from data import config
+from aiogram import Dispatcher
+import asyncio
 
 
-async def on_startup(dispatcher):
-    await dp.bot.set_webhook(config.WEBHOOK_URL)
+async def on_startup(dispatcher: Dispatcher):
+    asyncio.run(dp.bot.set_webhook(config.WEBHOOK_URL))
     db.main_db()
     # Notify about startup
     await on_startup_notify(dispatcher)

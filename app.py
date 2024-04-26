@@ -8,10 +8,9 @@ import asyncio
 
 
 async def on_startup(dispatcher: Dispatcher):
-    await asyncio.run(dp.bot.set_webhook(config.WEBHOOK_URL))
     db.main_db()
-    # Notify about startup
     await on_startup_notify(dispatcher)
+    await dispatcher.bot.set_webhook(config.WEBHOOK_URL)
 
 
 async def on_startup_handler():

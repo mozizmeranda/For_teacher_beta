@@ -11,12 +11,13 @@ async def on_startup(dp):
     await on_startup_notify(dp)
     await set_default_commands(dp)
 
+
 async def on_shutdown(dispatcher):
-    await dp.bot.delete_webhook()
+    await dispatcher.bot.delete_webhook()
 
 
 if __name__ == "__main__":
-    from loader import dp
+    from handlers import dp
     start_webhook(
         dispatcher=dp,
         webhook_path=config.WEBHOOK_PATH,

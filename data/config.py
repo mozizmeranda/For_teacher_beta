@@ -12,7 +12,7 @@ IP = "localhost"  # Тоже str, но для айпи адреса хоста
 WEBAPP_HOST = "0.0.0.0"
 WEBAPP_PORT = int(os.environ.get('PORT'))
 WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
-WEBHOOK_URL = f'{WEBAPP_HOST}{WEBHOOK_PATH}'
+WEBHOOK_URL = f'https://forteacherbot-96867b4c4706.herokuapp.com/'
 
 
 banned_users = [5928962311]

@@ -1,3 +1,4 @@
+import asyncio
 from loader import bot, dp
 from data import config
 from aiogram.utils.executor import start_webhook
@@ -15,8 +16,7 @@ async def on_startup(dp):
 async def on_shutdown(dispatcher):
     await dispatcher.bot.delete_webhook()
 
-
-if __name__ == "__main__":
+def fu():
     from handlers import dp
     start_webhook(
         dispatcher=dp,
@@ -26,4 +26,8 @@ if __name__ == "__main__":
         host=config.WEBAPP_HOST,
         port=config.WEBAPP_PORT
     )
+
+
+if __name__ == "__main__":
+    asyncio.run(fu())
 

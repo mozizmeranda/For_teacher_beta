@@ -1,30 +1,22 @@
 from aiogram.utils import executor
 from loader import dp, db, bot
-# import middlewares, filters, handlers
+import middlewares, filters, handlers
 from utils.notify_admins import on_startup_notify
-from data import config
-from aiogram import Dispatcher
-import asyncio
+from utils.set_bot_commands import set_default_commands
 
 
-async def on_startup(dispatcher: Dispatcher):
-    await bot.set_webhook(config.WEBHOOK_URL)
-    import middlewares
-    import filters
+async def on_startup(dispatcher):
+    await set_default_commands(dispatcher)
+    try:
+        await db.main_db()
+    except Exception as e:
+        print(e)
+
+    # db.delete_users()
+    await on_startup_notify(dispatcher)
 
 
-async def on_startup_handler():
-    await on_startup(dp)
-
-
-async def on_shutdown(dispatcher):
-    await dp.bot.delete_webhook()
-
-
-async def process_telegram_update(update):
-    await dp.process_update(update)
 
 if __name__ == "__main__":
-    executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, skip_updates=True, on_startup=on_startup,
-                           on_shutdown=on_shutdown, host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
 

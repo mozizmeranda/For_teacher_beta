@@ -66,7 +66,6 @@ class DataBase:
     def get_language(self, id):
         sql = f"SELECT language FROM Users WHERE id={id}"
         result = self.execute(sql=sql, fetchone=True)
-        print(f"ID: {id}, result: {result}")
         return result[0]
 
     # it returns (element,), only 1 element

@@ -8,11 +8,11 @@ env.read_env()
 BOT_TOKEN = "7196106888:AAG1v1ncrexwL2pgWO7PbPDrPqeAj-YmZdE"  # Забираем значение типа str
 ADMINS = [5928962311]  # Тут у нас будет список из админов
 channels = [-1001944359018]
-IP = "localhost"  # Тоже str, но для айпи адреса хоста
-WEBAPP_HOST = "0.0.0.0"
-# WEBAPP_PORT = int(os.environ.get('PORT'))
-WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
-WEBHOOK_URL = f'https://forteacherbot-96867b4c4706.herokuapp.com/'
+IP = "52.91.95.42"  # Тоже str, но для айпи адреса хоста
+WEBAPP_HOST = f"https://{IP}"
+WEBAPP_PORT = 8443
+WEBHOOK_PATH = f'/bot/{BOT_TOKEN}'
+WEBHOOK_URL = f'{WEBAPP_HOST}:{WEBAPP_PORT}{WEBHOOK_PATH}'
 
 
 banned_users = [5928962311]

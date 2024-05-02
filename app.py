@@ -7,10 +7,7 @@ from data import config
 
 
 async def on_startup(dispatcher):
-<<<<<<< HEAD
-=======
     await dp.bot.set_webhook(config.WEBHOOK_URL)
->>>>>>> e19375a9c9c0411f87eb29a42e7c634ce8086cd4
     await set_default_commands(dispatcher)
     try:
         await db.main_db()

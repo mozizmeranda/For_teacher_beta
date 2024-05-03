@@ -81,19 +81,17 @@ async def confirm(call: types.CallbackQuery, state: FSMContext):
             try:
                 await bot.send_message(chat_id=i[0], text=data['text'])
                 await call.answer(text="Рассыла проведена успешно", show_alert=True)
-                try:
-                    pass
-                except aiogram.utils.exceptions.MessageNotModified:
-                    await call.message.edit_reply_markup()
-                    await state.finish()
             except aiogram.utils.exceptions.BotBlocked or aiogram.utils.exceptions.MessageNotModified:
                 pass
+    await call.message.edit_reply_markup()
+    await state.finish()
 
 
 @dp.message_handler(Command("delete_answers"))
 async def delete_answers(message: types.Message):
     db.delete_table(table="answers")
     await message.answer("База ответов удалена")
+
 
 @dp.callback_query_handler(mailing_callback.filter(action="cancel"), state=Mailing.Confirm)
 async def cancel(call: types.CallbackQuery, state: FSMContext):

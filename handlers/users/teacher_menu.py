@@ -62,5 +62,4 @@ async def confirm_from_teacher(call: types.CallbackQuery, state: FSMContext):
 
 @dp.message_handler(Command("delete_answers"))
 async def delete_ans(msg: types.Message):
-    answers.delete_all()
     await msg.answer(text="База вопросов удалена")

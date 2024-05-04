@@ -1,3 +1,4 @@
+import asyncio
 from aiogram.utils import executor
 from loader import dp, db, bot
 import middlewares, filters, handlers
@@ -12,7 +13,7 @@ async def on_startup(dispatcher):
     try:
         await db.main_db()
     except Exception as e:
-        print(e)
+        print("Error initializing database:", e)
 
     await on_startup_notify(dispatcher)
 
@@ -26,6 +27,10 @@ async def on_shutdown(dispatcher):
 
 
 if __name__ == "__main__":
-    executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, on_startup=on_startup,
-                           skip_updates=True, on_shutdown=on_shutdown, host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
-    # executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
+    try:
+        executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH, on_startup=on_startup,
+                               skip_updates=True, on_shutdown=on_shutdown, host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
+    except Exception as e:
+        print("Error starting webhook executor:", e)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(on_shutdown(dp))

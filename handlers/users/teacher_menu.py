@@ -4,10 +4,11 @@ from aiogram.utils.exceptions import BotBlocked
 from loader import dp, bot, db
 from aiogram import types
 from keyboards.inline.teacher_confirm_button import teacher_menu
-from aiogram.utils.markdown import hcode
+from aiogram.utils.markdown import hcode, hbold
 from states.teacher_state import Teacher
 from aiogram.dispatcher.filters import Command
 from utils.misc.language_types import F_language
+from keyboards.inline.answer_key import question_button
 
 
 @dp.callback_query_handler(lambda x: x.data and x.data.startswith('q_'))
@@ -46,7 +47,6 @@ async def confirm_from_teacher(call: types.CallbackQuery, state: FSMContext):
         async with state.proxy() as data:
             receiver = db.get_from_table(element="id", table="questions", unique="code", argument=code)
             question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
-            # get_id = db.get_from_table(element="id", table="questions", unique="code", argument=code)
             answer = (receiver, question, data['answer'], code)
             db.insert_into_table(table="answers", values=answer)
             response = str(F_language(answer="Получен ответ на вопрос: ",
@@ -58,6 +58,20 @@ async def confirm_from_teacher(call: types.CallbackQuery, state: FSMContext):
     except aiogram.utils.exceptions.BotBlocked:
         await call.message.edit_reply_markup()
         await call.answer(text="Студент заблокировал бота. Ответ не был передан.")
+
+
+@dp.callback_query_handler(lambda x: x.data and x.data.startswith('cancel'), state=Teacher.Confirm)
+async def cancel_handler(call: types.CallbackQuery, state: FSMContext):
+    await call.answer("Вы отменили отправку ответа студенту", show_alert=True)
+    code = call.data.split('_')[1]
+    async with state.proxy() as data:
+        theme = db.get_from_table(element="theme", table="questions", unique="code", argument=code)
+        question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
+        student = db.get_from_table(element="student", table="questions", unique="code", argument=code)
+        text = f"{hbold(theme)}\n{question}\nВопрос задал: {student}"
+        await call.message.answer(text=text, reply_markup=question_button(code))
+    await state.finish()
+
 
 
 @dp.message_handler(Command("delete_answers"))

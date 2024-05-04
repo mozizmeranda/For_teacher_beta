@@ -21,15 +21,9 @@ def seconds_to_time(seconds):
 async def find_question(message: types.Message, state: FSMContext):
     if message.from_user.id == int(ADMINS[0]):
         await message.answer("Пожалуйста отправьте мне код вопроса.")
-        # await bot.send_message(i, text="Пожалуйста отправьте мне код вопроса.")
         await state.set_state("find_question")
     else:
         await message.answer("Чего? Я вас не понимаю.")
-
-
-@dp.message_handler(text="Hello")
-async def get_hello(message: types.Message):
-    await message.answer("Hello")
 
 
 @dp.message_handler(state="find_question")
@@ -89,7 +83,8 @@ async def confirm(call: types.CallbackQuery, state: FSMContext):
 
 @dp.message_handler(Command("delete_answers"))
 async def delete_answers(message: types.Message):
-    db.delete_table(table="answers")
+    logging.log(level=logging.INFO)
+    await db.delete_table(table="answers")
     await message.answer("База ответов удалена")
 
 

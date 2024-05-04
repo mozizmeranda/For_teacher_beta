@@ -8,7 +8,7 @@ def teacher_menu(code: int):
     markup = InlineKeyboardMarkup()
     markup.add(
         InlineKeyboardButton(text="Подтвердить отправку", callback_data=f"t_{code}"),
-        InlineKeyboardButton(text="Отменить", callback_data="cancel")
+        InlineKeyboardButton(text="Отменить", callback_data=f"cancel_{code}")
     )
     return markup
 

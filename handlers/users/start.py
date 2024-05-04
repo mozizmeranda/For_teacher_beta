@@ -9,12 +9,6 @@ from keyboards.default.teacher_keys import teachers_buttons
 from keyboards.default.student_menu import menu
 
 
-@dp.message_handler(Command("delete_users"))
-async def delete_all_ones(message: types.Message):
-    db.delete_table(table="Users")
-    await message.answer(text="Все успешно удалено")
-
-
 @dp.message_handler(Command("edit"))
 async def edit_data(message: types.Message):
     await message.answer(F_language(answer="Вы вызвали команду для замены ваших данных. Вам придется заново зарегистрироваться.",

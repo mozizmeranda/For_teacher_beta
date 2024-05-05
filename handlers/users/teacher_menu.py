@@ -64,14 +64,18 @@ async def confirm_from_teacher(call: types.CallbackQuery, state: FSMContext):
 async def cancel_handler(call: types.CallbackQuery, state: FSMContext):
     await call.answer("Вы отменили отправку ответа студенту", show_alert=True)
     code = call.data.split('_')[1]
+    theme = db.get_from_table(element="theme", table="questions", unique="code", argument=code)
+    question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
+    student = db.get_from_table(element="student", table="questions", unique="code", argument=code)
     async with state.proxy() as data:
-        theme = db.get_from_table(element="theme", table="questions", unique="code", argument=code)
-        question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
-        student = db.get_from_table(element="student", table="questions", unique="code", argument=code)
-        text = f"{hbold(theme)}\n{question}\nВопрос задал: {student}"
-        await call.message.answer(text=text, reply_markup=question_button(code))
+        if len(theme) < 15:
+            text = f"{hbold(theme)}\n{question}\nВопрос задал: {student}"
+            await call.message.answer(text=text, reply_markup=question_button(code))
+        else:
+            text = f"Вопрос: {question}\n\nСтудент: {student}"
+            await bot.send_photo(chat_id=call.message.chat.id, photo=theme, caption=text,
+                                 reply_markup=question_button(code))
     await state.finish()
-
 
 
 @dp.message_handler(Command("delete_answers"))

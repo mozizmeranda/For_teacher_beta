@@ -11,7 +11,8 @@ from keyboards.default.student_menu import menu
 
 @dp.message_handler(Command("edit"))
 async def edit_data(message: types.Message):
-    await message.answer(F_language(answer="Вы вызвали команду для замены ваших данных. Вам придется заново зарегистрироваться.",
+    await message.answer(F_language(answer="Вы вызвали команду для замены ваших данных. "
+                                           "Вам придется заново зарегистрироваться.",
                                     language=db.get_language(id=message.from_user.id)))
     db.delete_user(id=message.from_user.id)
     await message.answer(text="Здравствуйте, пожалуйста укажите какой язык вы предпочитаете использовать. \n"

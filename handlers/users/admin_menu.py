@@ -83,7 +83,6 @@ async def confirm(call: types.CallbackQuery, state: FSMContext):
 
 @dp.message_handler(Command("delete_answers"))
 async def delete_answers(message: types.Message):
-    logging.log(level=logging.INFO)
     await db.delete_table(table="answers")
     await message.answer("База ответов удалена")
 

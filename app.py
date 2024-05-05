@@ -5,8 +5,8 @@ import middlewares, filters, handlers
 from utils.notify_admins import on_startup_notify
 from utils.set_bot_commands import set_default_commands
 from data import config
-#
-#
+
+
 async def on_startup(dispatcher):
     # await dp.bot.set_webhook(config.WEBHOOK_URL, certificate=ssl_certificate)
     try:

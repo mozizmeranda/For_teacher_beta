@@ -13,9 +13,12 @@ ADMINS = [5928962311]  # Тут у нас будет список из адми�
 channels = [-1001944359018]
 IP = "0.0.0.0"  # Тоже str, но для айпи адреса хоста
 WEBAPP_HOST = f"https://{IP}"
-WEBAPP_PORT = 8443
-WEBHOOK_PATH = f'/bot/{BOT_TOKEN}'
+WEBAPP_PORT = os.getenv("WEBAPP_PORT")
+WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
 WEBHOOK_URL = f'{WEBAPP_HOST}:{WEBAPP_PORT}{WEBHOOK_PATH}'
 
+
+WEBHOOK_SSL_CERT = "webhook_cert.pem"
+WEBHOOK_SSL_KEY = "webhook_key.pem"
 
 banned_users = [5928962311]

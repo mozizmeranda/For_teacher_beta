@@ -11,9 +11,9 @@ Questions_bot = "7196106888:AAG1v1ncrexwL2pgWO7PbPDrPqeAj-YmZdE"
 BOT_TOKEN = "5424116057:AAFut2pIxoyD0Ty3Lc_rCjffXTzyZh9Erno"
 ADMINS = [5928962311]  # Тут у нас будет список из админов
 channels = [-1001944359018]
-IP = "52.90.236.147"  # Тоже str, но для айпи адреса хоста
+IP = "localhost"  # Тоже str, но для айпи адреса хоста
 WEBAPP_HOST = f"https://{IP}"
-WEBAPP_PORT = 8080
+WEBAPP_PORT = 8443
 WEBHOOK_PATH = f'/bot/{BOT_TOKEN}'
 WEBHOOK_URL = f'{WEBAPP_HOST}:{WEBAPP_PORT}{WEBHOOK_PATH}'
 

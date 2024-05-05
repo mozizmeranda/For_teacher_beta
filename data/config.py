@@ -18,7 +18,7 @@ WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
 WEBHOOK_URL = f'{WEBAPP_HOST}:{WEBAPP_PORT}{WEBHOOK_PATH}'
 
 
-WEBHOOK_SSL_CERT = "webhook_cert.pem"
-WEBHOOK_SSL_KEY = "webhook_key.pem"
+# WEBHOOK_SSL_CERT = "webhook_cert.pem"
+# WEBHOOK_SSL_KEY = "webhook_key.pem"
 
 banned_users = [5928962311]

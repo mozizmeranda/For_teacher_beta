@@ -26,8 +26,7 @@ if __name__ == "__main__":
     try:
         loop.run_until_complete(on_startup(dp))
         executor.start_webhook(dispatcher=dp, webhook_path=config.WEBHOOK_PATH,
-                               on_shutdown=on_shutdown, host=config.WEBAPP_HOST, port=config.WEBAPP_PORT,
-                               ssl_certificate=ssl_certificate)
+                               on_shutdown=on_shutdown, host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
     except Exception as e:
         print("Error:", e)
         loop.run_until_complete(on_shutdown(dp))

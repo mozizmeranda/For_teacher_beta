@@ -20,6 +20,7 @@ async def make_answer(call: types.CallbackQuery, state: FSMContext):
             data['code'] = int(code)
         question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
         ans = f"Ответьте на этот вопрос с кодом: {hcode(code)}\n Сам вопрос: {question}"
+        await call.message.answer(text=str(call.message.forward_from_message_id))
         await call.message.answer(text=ans)
         await call.message.edit_reply_markup()
     else:
@@ -48,10 +49,14 @@ async def confirm_from_teacher(call: types.CallbackQuery, state: FSMContext):
             receiver = db.get_from_table(element="id", table="questions", unique="code", argument=code)
             question = db.get_from_table(element="question", table="questions", unique="code", argument=code)
             answer = (receiver, question, data['answer'], code)
+            theme = db.get_from_table(element="theme", table="questions", unique="code", argument=code)
             db.insert_into_table(table="answers", values=answer)
             response = str(F_language(answer="Получен ответ на вопрос: ",
                                       language=db.get_language(id=receiver))) + f"{question}:\n{data['answer']}"
-            await bot.send_message(chat_id=receiver, text=response)
+            if len(theme) >= 15:
+                await bot.send_photo(chat_id=receiver, photo=theme, caption=response)
+            else:
+                await bot.send_message(chat_id=receiver, text=response)
         await call.answer(text="Ответ отправлен", show_alert=True)
         await call.message.edit_reply_markup()
         await state.finish()

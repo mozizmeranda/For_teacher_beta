@@ -1,20 +1,21 @@
-import sqlite3
+import psycopg2
+from data import config
 
 
 class DataBase:
-    def __init__(self, path_to_db="database.db"):
+    def __init__(self, path_to_db):
         self.path_to_db = path_to_db
 
     @property
     def connection(self):
-        return sqlite3.connect(self.path_to_db)
+        return psycopg2.connect(dsn=config.postgres_url)
 
-    def execute(self, sql: str, params: tuple = None, fetchone=False,
-                fetchall=False, commit=False):
+    def execute(self, sql: str, params: tuple=None, fetchone: bool = False, fetchall: bool = False,
+                commit: bool = False):
         if not params:
             params = tuple()
+
         connection = self.connection
-        # connection.set_trace_callback(logger)
         cursor = connection.cursor()
         data = None
         cursor.execute(sql, params)
@@ -25,8 +26,8 @@ class DataBase:
             data = cursor.fetchone()
         if fetchall:
             data = cursor.fetchall()
-        connection.close()
 
+        connection.close()
         return data
 
     def create_table_users(self):
@@ -34,12 +35,11 @@ class DataBase:
         self.execute(sql, commit=True)
 
     def create_table_questions(self):
-        sql = ("CREATE TABLE IF NOT EXISTS questions(id INT, theme TEXT, question TEXT, student TEXT, "
-               "code INT, type TEXT NULL)")
+        sql = "CREATE TABLE IF NOT EXISTS questions(id INT, theme TEXT, question TEXT, student TEXT, code INT)"
         self.execute(sql=sql, commit=True)
 
     def create_table_answers(self):
-        sql = "CREATE TABLE IF NOT EXISTS answers(id INT, question TEXT, answer TEXT, code INT, type TEXT)"
+        sql = "CREATE TABLE IF NOT EXISTS answers(id INT, question TEXT, answer TEXT, code INT)"
         self.execute(sql=sql, commit=True)
 
     def main_db(self):
@@ -52,12 +52,12 @@ class DataBase:
             sql_users = f"INSERT INTO Users(id, group_name, full_name, language) VALUES (?, ?, ?, ?)"
             self.execute(sql=sql_users, params=values, commit=True)
         if table == "questions":
-            parameters_questions = "(id, theme, question, student, code, type)"
-            sql_questions = f"INSERT INTO questions{parameters_questions} VALUES (?, ?, ?, ?, ?, ?)"
+            parameters_questions = "(id, theme, question, student, code)"
+            sql_questions = f"INSERT INTO questions{parameters_questions} VALUES (?, ?, ?, ?, ?)"
             self.execute(sql=sql_questions, params=values, commit=True)
         if table == "answers":
-            parameters_answers = "(id, question, answer, code, type)"
-            sql_answers = f"INSERT INTO answers{parameters_answers} VALUES (?, ?, ?, ?, ?)"
+            parameters_answers = "(id, question, answer, code)"
+            sql_answers = f"INSERT INTO answers{parameters_answers} VALUES (?, ?, ?, ?)"
             self.execute(sql=sql_answers, params=values, commit=True)
 
     def check_existance(self, table: str, criteria: str, id: int):
@@ -67,7 +67,6 @@ class DataBase:
     def get_language(self, id):
         sql = f"SELECT language FROM Users WHERE id={id}"
         result = self.execute(sql=sql, fetchone=True)
-        print(f"Iters: {result[0]}")
         return result[0]
 
     # it returns (element,), only 1 element
